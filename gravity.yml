@@ -1,0 +1,48 @@
+openapi: '3.0.2'
+info:
+  title: Gravity MISIS API
+  version: '1.0'
+servers:
+  - url: http://localhost:8000
+    description: Local server
+components:
+  securitySchemes:
+    GravityTGUserId:
+      type: apiKey
+      in: header
+      name: gravity-tguid
+    TGQueryCheckString:
+      type: apiKey
+      in: header
+      name: gravity-tgquerycheckstring
+paths:
+  /version:
+    get:
+      operationId: version
+      security: []
+      responses:
+        '200': 
+          description: OK
+  /tgconfig:
+    get:
+      operationId: tgconfig
+      security: []
+      responses:
+        '200': 
+          description: OK
+  /telegram:
+    post:
+      operationId: telegram
+      security: []
+      responses:
+        '200':
+          description: OK
+  /likeordislike:
+    post:
+      operationId: likeordislike
+      responses:
+        '200':
+          description: OK
+security:
+  - GravityTGUserId: []
+    TGQueryCheckString: []
