@@ -73,7 +73,7 @@ export async function setupTelegramBot(bot: TelegramBot): Promise<any> {
             console.log(`${colours.fg.red}Setting TG setMyCommand error '${JSON.stringify(reason)}'${colours.reset}`)
         }
         try {
-            ret = await (bot as any).setMyShortDescription({short_description: "Gravity bot"});
+            ret = await (bot as any).setMyShortDescription({short_description: "Tap bot"});
             res.setMyShortDescriptionSuccess.push(ret);
             console.log(`${colours.fg.green}Setting TG setMyShortDescription successful '${JSON.stringify(ret)}'${colours.reset}`);
         } catch (reason: any) {
@@ -82,7 +82,7 @@ export async function setupTelegramBot(bot: TelegramBot): Promise<any> {
         }
 
         try {
-            ret = await (bot as any).setMyDescription({description: "Here is gravity bot"});
+            ret = await (bot as any).setMyDescription({description: "Here is tap bot"});
             res.setMyDescriptionSuccess.push(ret);
             console.log(`${colours.fg.green}Setting TG setMyDescription successful '${JSON.stringify(ret)}'${colours.reset}`);
         } catch (reason: any) {
@@ -110,7 +110,7 @@ async function notFound(c: any, req: Request, res: Response){
 const bot = new TelegramBot(process.env.tg_bot_authtoken as string);
 
 const api = new OpenAPIBackend({ 
-    definition: 'gravity.yml'
+    definition: 'tap.yml'
 });
 api.init();
 api.register({
@@ -145,14 +145,14 @@ async function likeordislike(c: Context, req: Request, res: Response, person: Pe
     }
 }
 
-api.registerSecurityHandler('GravityTGUserId',  async (context, req, res, person: Person)=>{
+api.registerSecurityHandler('TapTGUserId',  async (context, req, res, person: Person)=>{
     return person !== undefined;
 });
 
 api.registerSecurityHandler('TGQueryCheckString', async (context, req: Request, res, person: Person)=>{
     try {
-        const gravity_tgquerycheckstring = decodeURIComponent(req.headers["gravity-tgquerycheckstring"] as string);
-        const arr = gravity_tgquerycheckstring.split('&');
+        const tap_tgquerycheckstring = decodeURIComponent(req.headers["tap-tgquerycheckstring"] as string);
+        const arr = tap_tgquerycheckstring.split('&');
         const hashIndex = arr.findIndex(str => str.startsWith('hash='));
         const hash = arr.splice(hashIndex)[0].split('=')[1];
 
@@ -175,11 +175,11 @@ app.use(cors());
 app.use(async (req: Request, res: Response) => {
     const requestUUID = randomUUID();
     const requestStart = new Date();
-    req.headers["gravity-uuid"] = requestUUID;
-    req.headers["gravity-start"] = requestStart.toISOString();
-    console.log(`🚀 ${requestStart.toISOString()} - [${requestUUID}] - ${req.method} ${colours.fg.yellow}${req.path}\n${colours.fg.blue}headers: ${Object.keys(req.headersDistinct).filter(v => v.startsWith("gravity-")).map(v => `${v} = '${req.headersDistinct[v]}'`).join(", ")}\nbody: ${Object.keys(req.body).map(v => `${v} = '${req.body[v]}'`).join(", ")}\nquery: ${Object.keys(req.query).map(v => `${v} = '${req.query[v]}'`).join(", ")}${colours.reset}`);
+    req.headers["tap-uuid"] = requestUUID;
+    req.headers["tap-start"] = requestStart.toISOString();
+    console.log(`🚀 ${requestStart.toISOString()} - [${requestUUID}] - ${req.method} ${colours.fg.yellow}${req.path}\n${colours.fg.blue}headers: ${Object.keys(req.headersDistinct).filter(v => v.startsWith("tap-")).map(v => `${v} = '${req.headersDistinct[v]}'`).join(", ")}\nbody: ${Object.keys(req.body).map(v => `${v} = '${req.body[v]}'`).join(", ")}\nquery: ${Object.keys(req.query).map(v => `${v} = '${req.query[v]}'`).join(", ")}${colours.reset}`);
 
-    const stguid = req.headers["gravity-tguid"] as string;
+    const stguid = req.headers["tap-tguid"] as string;
     const person = stguid === undefined?undefined:await Person.getByTgUserId(stguid);
     let ret;
 
@@ -196,7 +196,7 @@ app.use(async (req: Request, res: Response) => {
         ret =  res.status(500).json({code: "Wrong parameters", description: `Request ${req.url}- ${(e as Error).message}`});
     }
     const requestEnd = new Date();
-    req.headers["gravity-request-end"] = requestEnd.toISOString();
+    req.headers["tap-request-end"] = requestEnd.toISOString();
     console.log(`🏁 ${requestStart.toISOString()} - [${requestUUID}] - ${req.method} ${res.statusCode >= 200 && res.statusCode < 400 ? colours.fg.green : colours.fg.red}${req.path}${colours.reset} - ${res.statusCode} - ${requestEnd.getTime() - requestStart.getTime()} ms`);
     return ret;
 });

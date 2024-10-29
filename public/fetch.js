@@ -12,8 +12,8 @@ function fetchCommand(command, requestData, successcb, errorcb) {
     $.ajaxSetup({
         headers: {
             'Content-Type': 'application/json; charset=utf-8',
-            'gravity-tgquerycheckstring': querycheckstring,
-            'gravity-tguid': user.id
+            'tap-tgquerycheckstring': querycheckstring,
+            'tap-tguid': user.id
         }
     });
     $.post(command, JSON.stringify(requestData), (data, status, xhdr)=>{
